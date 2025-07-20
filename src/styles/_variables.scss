@@ -1,0 +1,15 @@
+// styles/_variables.scss
+$primary-color: #4f46e5;
+$secondary-color: #6366f1;
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f3f4f6;
+}
+
+button {
+  background: $primary-color;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 20px;
+}
