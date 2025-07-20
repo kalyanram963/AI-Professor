@@ -415,7 +415,7 @@ const AskProfessorChat = ({ userId, db, appId, updateXP, showModal }) => {
           className="chat-input"
           placeholder="Type your question here..."
           value={question}
-          onChange={(e) => setQuestion(e.target.value)}
+          onChange={(e) => e.target.value.length <= 500 && setQuestion(e.target.value)} // Limit input length
           onKeyPress={handleKeyPress}
           disabled={isChatLoading}
         />
@@ -604,7 +604,7 @@ const NotesSummarizer = ({ userId, db, appId, updateXP, showModal }) => {
         className="notes-textarea"
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
-        placeholder="Paste your notes or text here, or upload a .txt, .pdf, .doc, .docx, .xls, or .xlsx file..."
+        placeholder="Paste your notes or text here, or upload a .txt, .pdf, .doc, .docx, or .xlsx file..."
         disabled={isSummarizing}
       />
       <div className="notes-actions">
@@ -1002,6 +1002,12 @@ const PersonalStudyPlan = ({ userId, db, appId, showModal }) => {
 
   const generateGoogleCalendarLink = (plan) => {
     const startDate = new Date(plan.date);
+    // Check if startDate is a valid date object
+    if (isNaN(startDate.getTime())) {
+      console.warn("Invalid date for Google Calendar link:", plan.date);
+      return null; // Return null if the date is invalid
+    }
+
     const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // Assume 1 hour duration for simplicity
     const formatDateTime = (date) => date.toISOString().replace(/[-:]|\.\d{3}/g, '');
 
@@ -1048,15 +1054,17 @@ const PersonalStudyPlan = ({ userId, db, appId, showModal }) => {
               <p className="text-gray-800 dark:text-gray-200">{plan.description}</p>
               <p className="text-gray-800 dark:text-gray-200">Date: <span className="font-medium">{plan.date}</span></p>
               <div className="item-actions">
-                <a
-                  href={generateGoogleCalendarLink(plan)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <button className="calendar-link-button bg-yellow-500 hover:bg-yellow-600">
-                    <Calendar className="w-4 h-4 mr-1" /> Add to Google Calendar
-                  </button>
-                </a>
+                {generateGoogleCalendarLink(plan) && ( // Only render button if link is valid
+                  <a
+                    href={generateGoogleCalendarLink(plan)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <button className="calendar-link-button bg-yellow-500 hover:bg-yellow-600">
+                      <Calendar className="w-4 h-4 mr-1" /> Add to Google Calendar
+                    </button>
+                  </a>
+                )}
                 <button
                   className="delete-button"
                   onClick={() => handleDeletePlan(plan.id)}
@@ -3152,6 +3160,7 @@ const App = () => {
           width: 16px;
           height: 16px;
         }
+
 
         /* --- Quiz Specific --- */
         .quiz-controls {
