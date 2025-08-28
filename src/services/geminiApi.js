@@ -2,7 +2,7 @@
 
 // The API key is left as an empty string.
 // In the Canvas environment, this will be automatically provided at runtime.
-const GEMINI_API_KEY = "";
+const GEMINI_API_KEY = "AIzaSyBgyaHYxKaUruNAD1mt-x5I28ChQ2n_lFM";
 
 const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
 
