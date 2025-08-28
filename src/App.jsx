@@ -107,7 +107,6 @@ const renderMarkdown = (markdownText) => {
 // --- API Service (geminiApi.js equivalent, now integrated directly or as helper) ---
 const askGemini = async (promptText, imageBase64 = null) => {
   const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY || ""; // Use process.env for local .env files, or empty for Canvas
-
   const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
   const headers = { 'Content-Type': 'application/json' };
   let payload;
@@ -142,28 +141,59 @@ const askGemini = async (promptText, imageBase64 = null) => {
     };
   }
 
-  try {
-    const response = await fetch(`${geminiEndpoint}?key=${GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(payload),
-    });
+  const MAX_RETRIES = 5;
+  let retryCount = 0;
+  let delay = 1000; // Start with 1 second delay
 
-    const result = await response.json();
+  while (retryCount < MAX_RETRIES) {
+    try {
+      const response = await fetch(`${geminiEndpoint}?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(payload),
+      });
 
-    if (result.candidates && result.candidates.length > 0 &&
-        result.candidates[0].content && result.candidates[0].content.parts &&
-        result.candidates[0].content.parts.length > 0) {
-      return result.candidates[0].content.parts[0].text;
-    } else {
-      console.error('Unexpected API response structure:', result);
-      return "No response from Gemini AI.";
+      if (response.status === 429) {
+        console.warn(`Rate limit exceeded (429). Retrying in ${delay / 1000} seconds...`);
+        await new Promise(res => setTimeout(res, delay));
+        retryCount++;
+        delay *= 2; // Exponential backoff
+        continue; // Try again
+      }
+
+      // Check for other non-2xx status codes (e.g., 400, 500) that aren't 429
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error(`API Error ${response.status}:`, errorData);
+        // For non-retryable errors, break the loop and return an error message
+        return `Gemini API Error (${response.status}): ${errorData.error?.message || 'Unknown error'}`;
+      }
+
+      const result = await response.json();
+
+      if (result.candidates && result.candidates.length > 0 &&
+          result.candidates[0].content && result.candidates[0].content.parts &&
+          result.candidates[0].content.parts.length > 0) {
+        return result.candidates[0].content.parts[0].text;
+      } else {
+        console.error('Unexpected API response structure:', result);
+        return "No response from Gemini AI.";
+      }
+    } catch (error) {
+      // This catch block handles network errors (e.g., no internet, DNS issues)
+      console.error("Gemini API fetch error:", error);
+      console.warn(`Network error. Retrying in ${delay / 1000} seconds...`);
+      await new Promise(res => setTimeout(res, delay));
+      retryCount++;
+      delay *= 2; // Exponential backoff
     }
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "Sorry, I couldn't process your request.";
   }
+
+  // If all retries fail
+  console.error(`Gemini API Error: Failed after ${MAX_RETRIES} retries.`);
+  return "Sorry, I couldn't process your request after multiple attempts due to persistent issues.";
 };
+
 
 
 // --- Component: DashboardContent (src/pages/Dashboard.jsx equivalent) ---
