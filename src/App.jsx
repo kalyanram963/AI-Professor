@@ -106,7 +106,7 @@ const renderMarkdown = (markdownText) => {
 
 // --- API Service (geminiApi.js equivalent, now integrated directly or as helper) ---
 const askGemini = async (promptText, imageBase64 = null) => {
-  const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY || ""; // Use process.env for local .env files, or empty for Canvas
+  const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY || "AIzaSyBgyaHYxKaUruNAD1mt-x5I28ChQ2n_lFM"; // Use process.env for local .env files, or empty for Canvas
   const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
   const headers = { 'Content-Type': 'application/json' };
   let payload;
