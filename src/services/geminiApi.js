@@ -1,22 +1,9 @@
-// src/services/geminiApi.js
 
-// The API key is left as an empty string.
-// In the Canvas environment, this will be automatically provided at runtime.
-<<<<<<< HEAD
 const GEMINI_API_KEY = "AIzaSyACy4GggMOa9330dZrWSyzxs3bFyP8OyKg";
-=======
-const GEMINI_API_KEY = "AIzaSyBgyaHYxKaUruNAD1mt-x5I28ChQ2n_lFM";
->>>>>>> e138ed1b01524a51945a24468721cb21e6d8cd70
 
 const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
 
-/**
- * Sends a text prompt to the Gemini API and returns the AI's response.
- * Optionally includes image data for multimodal requests.
- * @param {string} promptText The text prompt for the AI.
- * @param {string|null} imageBase64 Optional base64 encoded image data (without prefix).
- * @returns {Promise<string>} The AI's generated text response.
- */
+
 export const askGemini = async (promptText, imageBase64 = null) => {
   const headers = { 'Content-Type': 'application/json' };
   let payload;
