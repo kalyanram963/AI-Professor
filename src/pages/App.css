@@ -1,0 +1,34 @@
+import React, { useState } from 'react';
+import { askGemini } from '../services/geminiApi';
+
+function ProfessorChat() {
+  const [input, setInput] = useState('');
+  const [response, setResponse] = useState('');
+
+  const handleAsk = async () => {
+    const answer = await askGemini(input);
+    setResponse(answer);
+  };
+
+  return (
+    <div>
+      <h2>Ask the AI Professor</h2>
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Type your question..."
+      />
+      <button onClick={handleAsk}>Ask</button>
+
+      {response && (
+        <div>
+          <h3>AI Response:</h3>
+          <p>{response}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default ProfessorChat;
