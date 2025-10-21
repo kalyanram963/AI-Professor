@@ -33,6 +33,7 @@ const CANVAS_INITIAL_AUTH_TOKEN = window.__initial_auth_token;
 const firebaseConfig = typeof CANVAS_FIREBASE_CONFIG !== 'undefined'
   ? JSON.parse(CANVAS_FIREBASE_CONFIG)
   : {
+<<<<<<< HEAD
       // Cleaned indentation here to fix the SyntaxError: Unexpected character ''
       apiKey: "AIzaSyDnaBfSht42akyQ4kbrxpjiVgENQJ2kuoY",
       authDomain: "ai-proffessor.firebaseapp.com",
@@ -41,6 +42,15 @@ const firebaseConfig = typeof CANVAS_FIREBASE_CONFIG !== 'undefined'
       messagingSenderId: "564300105563",
       appId: "1:564300105563:web:15f58a22d98ed86be33c7e",
       measurementId: "G-423BGY76M8"
+=======
+      apiKey: "AIzaSyAZKlwYEgFRH2-Alx7vrbIRrovRog8Cd4g", // Replace with your actual API Key for local development
+      authDomain: "education-1a7b6.firebaseapp.com", // Replace with your actual Auth Domain for local development
+      projectId: "education-1a7b6", // Replace with your actual Project ID for local development
+      storageBucket: "education-1a7b6.firebasestorage.app",
+      messagingSenderId: "765145101901",
+      appId: "1:765145101901:web:27ee0a2502953c2cafce04",
+      measurementId: "G-MVGC0KKRT0"
+>>>>>>> e138ed1b01524a51945a24468721cb21e6d8cd70
     };
 
 // Use Canvas-provided app ID if available, otherwise fall back to a default project ID.
@@ -107,8 +117,13 @@ const renderMarkdown = (markdownText) => {
 
 // --- API Service (geminiApi.js equivalent, now integrated directly or as helper) ---
 const askGemini = async (promptText, imageBase64 = null) => {
+<<<<<<< HEAD
   const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY || "AIzaSyACy4GggMOa9330dZrWSyzxs3bFyP8OyKg"; // Use process.env for local .env files, or empty for Canvas
   const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+=======
+  const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY || "AIzaSyBgyaHYxKaUruNAD1mt-x5I28ChQ2n_lFM"; // Use process.env for local .env files, or empty for Canvas
+  const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
+>>>>>>> e138ed1b01524a51945a24468721cb21e6d8cd70
   const headers = { 'Content-Type': 'application/json' };
   let payload;
 
